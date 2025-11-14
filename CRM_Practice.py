@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import *
 from PIL import ImageTk, Image
 import mysql.connector
+import csv
 
 
 root = tk.Tk()
@@ -94,19 +95,35 @@ def add_customer():
     # Clear the fields
     clear_fields()
 
+# Write to CSV Excel Function
+
+
+def write_to_csv(result):
+    with open('Customers.csv', 'a') as f:
+        w = csv.writer(f, dialect='excel')
+        for record in result:
+            w.writerow(record)
+
 # List Customers
 
 
 def list_customers():
     list_customer_query = tk.Tk()
     list_customer_query.title("List All Customers")
-    list_customer_query.geometry("800x600")
+    list_customer_query.geometry("900x600")
     # Query the Database
     my_cursor.execute("SELECT * FROM customers")
     result = my_cursor.fetchall()
-    for x in result:
-        lookup_label = Label(list_customer_query, text=x)
-        lookup_label.pack()
+
+    for index, x in enumerate(result):
+        num = 0
+        for y in x:
+            lookup_label = Label(list_customer_query, text=y)
+            lookup_label.grid(row=index, column=num)
+            num += 1
+    csv_button = Button(list_customer_query, text="Save to Excel",
+                        command=lambda: write_to_csv(result))
+    csv_button.grid(row=index+1, column=0)
 
 
 # Create a Label
@@ -123,7 +140,8 @@ address1_label = Label(root, text="Address 1").grid(
     row=3, column=0, padx=10, sticky=W)
 address2_label = Label(root, text="Address 2").grid(
     row=4, column=0, padx=10, sticky=W)
-city_label = Label(root, text="City").grid(row=5, column=0, padx=10, sticky=W)
+city_label = Label(root, text="City").grid(
+    row=5, column=0, padx=10, sticky=W)
 state_label = Label(root, text="State").grid(
     row=6, column=0, padx=10, sticky=W)
 zipcode_label = Label(root, text="Zipcode").grid(
@@ -190,13 +208,13 @@ price_paid_box.grid(row=14, column=1, pady=5)
 add_customer_button = Button(
     root, text="Add Customer To Database", command=add_customer)
 add_customer_button.grid(row=15, column=0, padx=10, pady=10)
-clear_fields_button = Button(root, text="Clear Fields", command=clear_fields)
+clear_fields_button = Button(
+    root, text="Clear Fields", command=clear_fields)
 clear_fields_button.grid(row=15, column=1)
 
 # List Customers Button
 list_customers_button = Button(
     root, text="List Customers", command=list_customers)
 list_customers_button.grid(row=16, column=0, sticky=W, padx=10)
-
 
 root.mainloop()
