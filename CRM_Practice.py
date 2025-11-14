@@ -94,6 +94,20 @@ def add_customer():
     # Clear the fields
     clear_fields()
 
+# List Customers
+
+
+def list_customers():
+    list_customer_query = tk.Tk()
+    list_customer_query.title("List All Customers")
+    list_customer_query.geometry("800x600")
+    # Query the Database
+    my_cursor.execute("SELECT * FROM customers")
+    result = my_cursor.fetchall()
+    for x in result:
+        lookup_label = Label(list_customer_query, text=x)
+        lookup_label.pack()
+
 
 # Create a Label
 title_label = Label(root, text='Jonbosss Customer Database',
@@ -179,9 +193,10 @@ add_customer_button.grid(row=15, column=0, padx=10, pady=10)
 clear_fields_button = Button(root, text="Clear Fields", command=clear_fields)
 clear_fields_button.grid(row=15, column=1)
 
-my_cursor.execute("SELECT * FROM customers")
-result = my_cursor.fetchall()
-for x in result:
-    print(x)
+# List Customers Button
+list_customers_button = Button(
+    root, text="List Customers", command=list_customers)
+list_customers_button.grid(row=16, column=0, sticky=W, padx=10)
+
 
 root.mainloop()
