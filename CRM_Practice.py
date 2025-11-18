@@ -77,7 +77,7 @@ def clear_fields():
     country_box.delete(0, END)
     phone_box.delete(0, END)
     email_box.delete(0, END)
-    username_box.delete(0, END)
+    # username_box.delete(0, END)
     payment_method_box.delete(0, END)
     discount_code_box.delete(0, END)
     price_paid_box.delete(0, END)
@@ -86,9 +86,9 @@ def clear_fields():
 
 
 def add_customer():
-    sql_command = "INSERT INTO customers (first_name, last_name, zipcode, price_paid, email, address_1, address_2, city, state, country, phone, payment_method, discount_code, username) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    sql_command = "INSERT INTO customers (first_name, last_name, zipcode, price_paid, email, address_1, address_2, city, state, country, phone, payment_method, discount_code) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     values = (first_name_box.get(), last_name_box.get(), zipcode_box.get(), price_paid_box.get(), email_box.get(), address1_box.get(
-    ), address2_box.get(), city_box.get(), state_box.get(), country_box.get(), phone_box.get(), payment_method_box.get(), discount_code_box.get(), username_box.get())
+    ), address2_box.get(), city_box.get(), state_box.get(), country_box.get(), phone_box.get(), payment_method_box.get(), discount_code_box.get())
     my_cursor.execute(sql_command, values)
 
     # Commit the changes to the database
@@ -114,16 +114,37 @@ def search_customers():
     search_customers.geometry("1200x800")
 
     def update():
-        return
+        sql_command = """UPDATE customers SET first_name = %s, last_name = %s, zipcode = %s, price_paid = %s, email = %s, address_1 = %s, address_2 = %s, city = %s, state = %s, country = %s, phone = %s, payment_method = %s, discount_code = %s WHERE user_id = %s"""
+
+        first_name = first_name_box2.get()
+        last_name = last_name_box2.get()
+        zipcode = zipcode_box2.get()
+        price_paid = price_paid_box2.get()
+        email = email_box2.get()
+        address_1 = address1_box2.get()
+        address_2 = address2_box2.get()
+        city = city_box2.get()
+        state = state_box2.get()
+        country = country_box2.get()
+        phone = phone_box2.get()
+        payment_method = payment_method_box2.get()
+        discount_code = discount_code_box2.get()
+
+        id_value = id_box2.get()
+        inputs = (first_name, last_name, zipcode, price_paid, email, address_1, address_2,
+                  city, state, country, phone, payment_method, discount_code, id_value)
+        my_cursor.execute(sql_command, inputs)
+        mydb.commit()
+
+        search_customers.destroy()
 
     def edit_now(id, index):
         sql2 = "SELECT * FROM customers WHERE user_id = %s"
         name2 = (id, )
         result2 = my_cursor.execute(sql2, name2)
         result2 = my_cursor.fetchall()
-        print(result2)
-
         index += 1
+
         # Create Main Form To Enter Customer Data
         first_name_label = Label(search_customers, text="First Name").grid(
             row=index+1, column=0, padx=10, pady=10, sticky=W)
@@ -145,16 +166,14 @@ def search_customers():
             row=index+9, column=0, padx=10, sticky=W)
         email_label = Label(search_customers, text="Email Address").grid(
             row=index+10, column=0, padx=10, sticky=W)
-        username_label = Label(search_customers, text="Username").grid(
-            row=index+11, column=0, padx=10, sticky=W)
         payment_method_label = Label(search_customers, text="Payment Method").grid(
-            row=index+12, padx=10, sticky=W)
+            row=index+11, padx=10, sticky=W)
         discount_code_label = Label(search_customers, text="Discount Code").grid(
-            row=index+13, padx=10, sticky=W)
+            row=index+12, padx=10, sticky=W)
         price_paid_label = Label(search_customers, text="Price Paid").grid(
-            row=index+14, padx=10, sticky=W)
+            row=index+13, padx=10, sticky=W)
         id_label = Label(search_customers, text="User ID").grid(
-            row=index+15, padx=10, sticky=W)
+            row=index+14, padx=10, sticky=W)
 
         # Create Entry Boxes
         global first_name_box2
@@ -207,35 +226,29 @@ def search_customers():
         email_box2.grid(row=index+10, column=1, pady=5)
         email_box2.insert(0, result2[0][5])
 
-        global username_box2
-        username_box2 = Entry(search_customers)
-        username_box2.grid(row=index+11, column=1, pady=5)
-        username_box2.insert(0, result2[0][11])
-
         global payment_method_box2
         payment_method_box2 = Entry(search_customers)
-        payment_method_box2.grid(row=index+12, column=1, pady=5)
+        payment_method_box2.grid(row=index+11, column=1, pady=5)
         payment_method_box2.insert(0, result2[0][12])
 
         global discount_code_box2
         discount_code_box2 = Entry(search_customers)
-        discount_code_box2.grid(row=index+13, column=1, pady=5)
+        discount_code_box2.grid(row=index+12, column=1, pady=5)
         discount_code_box2.insert(0, result2[0][13])
 
         global price_paid_box2
         price_paid_box2 = Entry(search_customers)
-        price_paid_box2.grid(row=index+14, column=1, pady=5)
+        price_paid_box2.grid(row=index+13, column=1, pady=5)
         price_paid_box2.insert(0, result2[0][3])
 
         global id_box2
         id_box2 = Entry(search_customers)
-        id_box2.grid(row=index+15, column=1, pady=5)
+        id_box2.grid(row=index+14, column=1, pady=5)
         id_box2.insert(0, result2[0][4])
 
-        global save_record
         save_record = Button(
             search_customers, text="Update Record", command=update)
-        save_record.grid(row=index+16, column=0, padx=10)
+        save_record.grid(row=index+15, column=0, padx=10)
 
     def search_now():
         selected = drop.get()
@@ -347,14 +360,12 @@ phone_label = Label(root, text="Phone Number").grid(
     row=9, column=0, padx=10, sticky=W)
 email_label = Label(root, text="Email Address").grid(
     row=10, column=0, padx=10, sticky=W)
-username_label = Label(root, text="Username").grid(
-    row=11, column=0, padx=10, sticky=W)
 payment_method_label = Label(root, text="Payment Method").grid(
-    row=12, padx=10, sticky=W)
+    row=11, padx=10, sticky=W)
 discount_code_label = Label(root, text="Discount Code").grid(
-    row=13, padx=10, sticky=W)
+    row=12, padx=10, sticky=W)
 price_paid_label = Label(root, text="Price Paid").grid(
-    row=14, padx=10, sticky=W)
+    row=13, padx=10, sticky=W)
 
 # Create Entry Boxes
 first_name_box = Entry(root)
@@ -387,17 +398,14 @@ phone_box.grid(row=9, column=1, pady=5)
 email_box = Entry(root)
 email_box.grid(row=10, column=1, pady=5)
 
-username_box = Entry(root)
-username_box.grid(row=11, column=1, pady=5)
-
 payment_method_box = Entry(root)
-payment_method_box.grid(row=12, column=1, pady=5)
+payment_method_box.grid(row=11, column=1, pady=5)
 
 discount_code_box = Entry(root)
-discount_code_box.grid(row=13, column=1, pady=5)
+discount_code_box.grid(row=12, column=1, pady=5)
 
 price_paid_box = Entry(root)
-price_paid_box.grid(row=14, column=1, pady=5)
+price_paid_box.grid(row=13, column=1, pady=5)
 
 # Create Buttons
 add_customer_button = Button(
