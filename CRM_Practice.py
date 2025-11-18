@@ -3,6 +3,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 import mysql.connector
 import csv
+from tkinter import ttk
 
 
 root = tk.Tk()
@@ -113,6 +114,24 @@ def search_customers():
     search_customers.geometry("900x600")
 
     def search_now():
+        selected = drop.get()
+        if selected == "Search by...":
+            test = Label(search_customers,
+                         text="Hey! You forgot to pick a dropdown selection!")
+            test.grid(row=3, column=0)
+        if selected == "Last Name":
+            test = Label(search_customers,
+                         text="Hey! You picked Last Name")
+            test.grid(row=3, column=0)
+        if selected == "Email Address":
+            test = Label(search_customers,
+                         text="Hey! You picked Email Address")
+            test.grid(row=3, column=0)
+        if selected == "Customer ID":
+            test = Label(search_customers,
+                         text="Hey! You picked Customer ID")
+            test.grid(row=3, column=0)
+        '''
         searched = search_box.get()
         sql = "SELECT * FROM customers WHERE last_name = %s"
         name = (searched, )
@@ -124,18 +143,26 @@ def search_customers():
 
         searched_label = Label(search_customers, text=result)
         searched_label.grid(row=2, column=0, padx=10, columnspan=2)
+        '''
 
     # Entry Box to Search for Customer
     search_box = Entry(search_customers)
     search_box.grid(row=0, column=1, padx=10, pady=10)
     # Entry Box Label for Search for Customer
     search_box_label = Label(
-        search_customers, text="Search Customers by Last Name: ")
+        search_customers, text="Search: ")
     search_box_label.grid(row=0, column=0, padx=10, pady=10)
     # Entry Box to Search for Customer
     search_button = Button(
         search_customers, text="Search Customers", command=search_now)
     search_button.grid(row=1, column=0, padx=10)
+    # Drop down box
+    drop = ttk.Combobox(search_customers, value=[
+                        'Search by...', 'Last Name', 'Email Address', 'Customer ID'])
+    drop.current(0)
+    drop.grid(row=0, column=2)
+
+
 # List Customers
 
 
