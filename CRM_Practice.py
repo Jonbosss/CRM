@@ -115,25 +115,20 @@ def search_customers():
 
     def search_now():
         selected = drop.get()
+        sql = ""
         if selected == "Search by...":
             test = Label(search_customers,
                          text="Hey! You forgot to pick a dropdown selection!")
-            test.grid(row=3, column=0)
+            test.grid(row=2, column=0)
         if selected == "Last Name":
-            test = Label(search_customers,
-                         text="Hey! You picked Last Name")
-            test.grid(row=3, column=0)
+            sql = "SELECT * FROM customers WHERE last_name = %s"
         if selected == "Email Address":
-            test = Label(search_customers,
-                         text="Hey! You picked Email Address")
-            test.grid(row=3, column=0)
+            sql = "SELECT * FROM customers WHERE email = %s"
         if selected == "Customer ID":
-            test = Label(search_customers,
-                         text="Hey! You picked Customer ID")
-            test.grid(row=3, column=0)
-        '''
+            sql = "SELECT * FROM customers WHERE user_id = %s"
+
         searched = search_box.get()
-        sql = "SELECT * FROM customers WHERE last_name = %s"
+        # sql = "SELECT * FROM customers WHERE last_name = %s"
         name = (searched, )
         result = my_cursor.execute(sql, name)
         result = my_cursor.fetchall()
@@ -142,8 +137,7 @@ def search_customers():
             result = "Record Not Found..."
 
         searched_label = Label(search_customers, text=result)
-        searched_label.grid(row=2, column=0, padx=10, columnspan=2)
-        '''
+        searched_label.grid(row=3, column=0, padx=10, columnspan=2)
 
     # Entry Box to Search for Customer
     search_box = Entry(search_customers)
